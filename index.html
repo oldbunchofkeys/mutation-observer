@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mutation Observer</title>
+</head>
+<body>
+  <!-- TODO: make a button that adds content to the DOM
+    and use a mutation observer to watch for it and when
+    it is observed, change the style of the added-to-dom
+    content
+  -->
+  <div id="main">
+    <button id="button">click me 2 reveal som content</button>
+  </div>
+  <script>
+    const main = document.querySelector('#main');
+    const observer = new MutationObserver(mutations => {
+      for (let mutation of mutations) {
+        for (let node of mutation.addedNodes) {
+          if (!(node instanceof HTMLElement)) continue;
+          if (node.classList.contains('new-content')) {
+            console.log('We added #new-content!');
+            observer.disconnect();
+          }
+        }
+      }
+    });
+    observer.observe(main, {childList: true, subtree: true});
+    document.querySelector('#button').addEventListener('click', () => {
+      const newContent = document.createElement('div');
+      newContent.style.height = '100px';
+      newContent.style.width = '100px';
+      newContent.style.border = '1px solid black';
+      newContent.setAttribute('class', 'new-content');
+      document.querySelector('#main').append(newContent);
+    });
+  </script>
+</body>
+</html>
